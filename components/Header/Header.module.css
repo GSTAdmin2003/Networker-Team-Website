@@ -1,0 +1,370 @@
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background-color: var(--white);
+  border-bottom: 1px solid var(--border-color);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  height: var(--header-height);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Brand */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logoImg {
+  height: 45px;
+  width: auto;
+  display: block;
+  object-fit: contain;
+}
+
+.brandText {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.brandTitle {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--primary-color);
+  letter-spacing: 0.5px;
+  line-height: 1.1;
+}
+
+.brandSubtitle {
+  font-size: 10px;
+  font-weight: 700;
+  background: var(--brand-gradient);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+
+/* Navigation */
+.navList {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+.navItem > a,
+.servicesRow > a {
+  font-weight: 600;
+  color: var(--primary-color);
+  transition: var(--transition);
+  padding: 28px 0;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.navItem > a:hover,
+.servicesRow > a:hover {
+  color: var(--brand-blue);
+}
+
+.servicesRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.arrow {
+  font-size: 12px;
+  transition: var(--transition);
+}
+
+/* Only used on mobile, where hover doesn't exist. */
+.servicesToggle {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--primary-color);
+  cursor: pointer;
+  padding: 8px;
+}
+
+/* Mega menu (desktop) */
+.hasMegaMenu {
+  position: static;
+}
+
+.megaMenu {
+  position: absolute;
+  top: var(--header-height);
+  left: 0;
+  width: 100%;
+  background-color: var(--white);
+  border-bottom: 1px solid var(--border-color);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08);
+  opacity: 0;
+  visibility: hidden;
+  transition: var(--transition);
+  z-index: 99;
+}
+
+.hasMegaMenu:not(.dismissed):hover .megaMenu,
+.hasMegaMenu:not(.dismissed):focus-within .megaMenu {
+  opacity: 1;
+  visibility: visible;
+}
+
+.hasMegaMenu:not(.dismissed):hover .arrow,
+.hasMegaMenu:not(.dismissed):focus-within .arrow {
+  transform: rotate(180deg);
+}
+
+.megaContent {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 35px 20px;
+}
+
+.megaContent h4 {
+  font-size: 16px;
+  margin-bottom: 20px;
+  color: var(--primary-color);
+  border-bottom: 2px solid var(--brand-green);
+  padding-bottom: 8px;
+  display: inline-block;
+}
+
+.servicesList {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px 25px;
+}
+
+.servicesList a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--text-color);
+  font-size: 14px;
+  font-weight: 500;
+  transition: var(--transition);
+}
+
+.servicesList a svg {
+  color: var(--brand-green);
+  width: 22px;
+  flex-shrink: 0;
+}
+
+.servicesList a:hover {
+  color: var(--brand-blue);
+  transform: translateX(5px);
+}
+
+/* Utilities: language switch, socials, burger */
+.utils {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.langSwitch {
+  display: flex;
+  align-items: center;
+  background-color: var(--bg-light);
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  padding: 3px;
+  gap: 2px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.langSwitch:hover {
+  border-color: var(--brand-green);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.1);
+}
+
+.langPill {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+  padding: 4px 10px;
+  border-radius: 15px;
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.langPill:hover {
+  color: var(--brand-green);
+  background-color: rgba(16, 185, 129, 0.08);
+  transform: translateY(-1px);
+}
+
+.langActive,
+.langActive:hover {
+  background: var(--brand-gradient);
+  color: var(--white);
+  box-shadow: 0 2px 10px rgba(16, 185, 129, 0.4);
+  transform: scale(1.05);
+}
+
+.socials {
+  display: flex;
+  gap: 10px;
+}
+
+.social {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--white);
+  font-size: 16px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.12);
+}
+
+.telegram {
+  background: linear-gradient(135deg, #2aabee 0%, #229ed9 100%);
+}
+
+.whatsapp {
+  background: linear-gradient(135deg, #25d366 0%, #1ebe5d 100%);
+}
+
+.social:hover {
+  transform: translateY(-3px) scale(1.08);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+}
+
+.menuToggle {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: var(--primary-color);
+  line-height: 0;
+}
+
+/* Tablet & mobile: burger menu, services become a disclosure */
+@media (max-width: 992px) {
+  .nav {
+    display: none;
+    position: absolute;
+    top: var(--header-height);
+    left: 0;
+    width: 100%;
+    max-height: calc(100vh - var(--header-height));
+    overflow-y: auto;
+    background-color: var(--white);
+    border-bottom: 1px solid var(--border-color);
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.05);
+  }
+
+  .navOpen {
+    display: block;
+  }
+
+  .navList {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 20px;
+    gap: 15px;
+  }
+
+  .navItem > a,
+  .servicesRow > a {
+    padding: 10px 0;
+  }
+
+  .servicesRow > a .arrow {
+    display: none;
+  }
+
+  .servicesToggle {
+    display: inline-flex;
+  }
+
+  .megaMenu,
+  .hasMegaMenu:not(.dismissed):hover .megaMenu,
+  .hasMegaMenu:not(.dismissed):focus-within .megaMenu {
+    position: static;
+    opacity: 0;
+    visibility: hidden;
+    max-height: 0;
+    overflow: hidden;
+    box-shadow: none;
+    border: none;
+    padding-left: 15px;
+    transition: all 0.3s ease;
+  }
+
+  .hasMegaMenu.open .megaMenu,
+  .hasMegaMenu.open:hover .megaMenu,
+  .hasMegaMenu.open:focus-within .megaMenu {
+    opacity: 1;
+    visibility: visible;
+    max-height: 500px;
+    margin-top: 10px;
+  }
+
+  .hasMegaMenu .arrow,
+  .hasMegaMenu:not(.dismissed):hover .arrow,
+  .hasMegaMenu:not(.dismissed):focus-within .arrow {
+    transform: none;
+  }
+
+  .hasMegaMenu.open .servicesToggle .arrow {
+    transform: rotate(180deg);
+  }
+
+  .megaContent {
+    padding: 0 0 10px;
+  }
+
+  .servicesList {
+    grid-template-columns: 1fr;
+  }
+
+  .menuToggle {
+    display: block;
+  }
+}
+
+@media (max-width: 768px) {
+  .socials {
+    display: none;
+  }
+
+  .utils {
+    gap: 12px;
+  }
+
+  .brandTitle {
+    font-size: 14px;
+  }
+
+  .brandSubtitle {
+    font-size: 8px;
+    letter-spacing: 0.8px;
+  }
+
+  .logoImg {
+    height: 35px;
+  }
+}

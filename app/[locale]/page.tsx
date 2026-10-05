@@ -3,9 +3,10 @@ import { notFound } from "next/navigation";
 import { About } from "@/components/About/About";
 import { Contact } from "@/components/Contact/Contact";
 import { Footer } from "@/components/Footer/Footer";
+import { Header } from "@/components/Header/Header";
 import { Hero } from "@/components/Hero/Hero";
 import { Services } from "@/components/Services/Services";
-import { getDictionary } from "@/lib/i18n";
+import { getDictionary, toHeaderDictionary } from "@/lib/i18n";
 import { isLocale } from "@/lib/i18n/config";
 import { buildMetadata } from "@/lib/i18n/metadata";
 
@@ -21,6 +22,7 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
 
   return (
     <>
+      <Header locale={locale} dict={toHeaderDictionary(dict)} />
       <main id="top">
         <Hero dict={dict} />
         <Services dict={dict} />

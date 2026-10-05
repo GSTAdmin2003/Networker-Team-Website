@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState, type FocusEvent } from "react";
+import { useEffect, useRef, useState, type FocusEvent } from "react";
 import { FaBars, FaChevronDown, FaTelegram, FaWhatsapp, FaXmark } from "react-icons/fa6";
 import { ExternalLink } from "@/components/ExternalLink";
 import { serviceIcons } from "@/components/icons";
@@ -22,9 +22,17 @@ export function Header({ locale, dict }: { locale: Locale; dict: HeaderDictionar
   // lets Escape (or picking a link) hide it until the next fresh interaction.
   const [megaDismissed, setMegaDismissed] = useState(false);
 
+  const servicesItem = useRef<HTMLLIElement>(null);
+  const servicesLink = useRef<HTMLAnchorElement>(null);
+
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
       if (event.key !== "Escape") return;
+      // Hiding the menu would leave a focused link invisible and the browser
+      // would drop focus to <body>; hand it back to the trigger instead.
+      if (servicesItem.current?.contains(document.activeElement)) {
+        servicesLink.current?.focus();
+      }
       setMenuOpen(false);
       setServicesOpen(false);
       setMegaDismissed(true);
@@ -96,12 +104,18 @@ export function Header({ locale, dict }: { locale: Locale; dict: HeaderDictionar
               </a>
             </li>
             <li
+              ref={servicesItem}
               className={megaClasses}
               onPointerLeave={() => setMegaDismissed(false)}
               onBlur={onServicesBlur}
             >
               <div className={styles.servicesRow}>
-                <a href="#services" onClick={closeAll} {...current("services")}>
+                <a
+                  ref={servicesLink}
+                  href="#services"
+                  onClick={closeAll}
+                  {...current("services")}
+                >
                   {dict.nav.services}
                   <FaChevronDown className={styles.arrow} aria-hidden />
                 </a>

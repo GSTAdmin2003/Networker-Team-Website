@@ -85,6 +85,11 @@ for (const p of pages) {
   const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
   await page.goto(site + "/en", { waitUntil: "networkidle" });
   const mega = page.locator("#servicesMenu");
+  // A fast keyboard user: Tab immediately after focusing "Services" must enter the menu.
+  await page.locator('#mainNav a[href="#services"]').first().focus();
+  await page.keyboard.press("Tab");
+  const fastTab = await page.evaluate(() => document.getElementById("servicesMenu").contains(document.activeElement));
+  check("immediate Tab from Services enters the mega menu", fastTab);
   await page.locator('#mainNav a[href="#services"]').first().focus();
   await page.waitForTimeout(400);
   check("keyboard focus opens the mega menu", (await mega.evaluate((el) => getComputedStyle(el).visibility)) === "visible");
@@ -92,8 +97,8 @@ for (const p of pages) {
   await page.keyboard.press("Tab");
   await page.keyboard.press("Escape");
   await page.waitForTimeout(400);
-  const stillInside = await page.evaluate(() => document.getElementById("servicesMenu")?.closest("li")?.contains(document.activeElement));
-  check("focus is still inside the services item", Boolean(stillInside));
+  const focusBack = await page.evaluate(() => document.activeElement?.getAttribute("href"));
+  check(`Escape returns focus to the Services link (got ${focusBack})`, focusBack === "#services");
   check("Escape hides the mega menu", (await mega.evaluate((el) => getComputedStyle(el).visibility)) === "hidden");
 
   // Anchor jump keeps the section heading below the sticky header.
@@ -101,6 +106,63 @@ for (const p of pages) {
   await page.waitForTimeout(800);
   const headingTop = await page.locator("#contact h2").evaluate((el) => el.getBoundingClientRect().top);
   check(`#contact heading not hidden by header (top=${Math.round(headingTop)}px)`, headingTop >= 85);
+
+  // Scroll-spy: bottom of page marks Contact.
+  await page.goto(site + "/en", { waitUntil: "networkidle" });
+  await page.evaluate(() => window.scrollTo({ top: document.documentElement.scrollHeight, behavior: "instant" }));
+  await page.waitForTimeout(500);
+  const bottomActive = await page.locator('#mainNav a[aria-current="location"]').getAttribute("href");
+  check(`scroll-spy at page bottom marks #contact (got ${bottomActive})`, bottomActive === "#contact");
+
+  // Action bar is desktop-hidden (display:none also removes it from the a11y tree).
+  const barDisplay = await page.locator('nav[aria-label] a[href^="tel:"]').last().evaluate((el) => getComputedStyle(el.parentElement).display);
+  check(`action bar hidden at 1280 (display=${barDisplay})`, barDisplay === "none");
+  await page.close();
+}
+
+// Arriving on a service anchor (fresh load, like a shared link): Services is
+// active and the row title is clear of the header.
+{
+  const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+  await page.goto(site + "/en#service-cfo", { waitUntil: "networkidle" });
+  await page.waitForTimeout(1500);
+  const serviceActive = await page.locator('#mainNav a[aria-current="location"]').getAttribute("href");
+  check(`#service-cfo marks Services active (got ${serviceActive})`, serviceActive === "#services");
+  const rowTop = await page.locator("#service-cfo h3").evaluate((el) => el.getBoundingClientRect().top);
+  check(`#service-cfo title below header (top=${Math.round(rowTop)}px)`, rowTop >= 85);
+
+  // In-page: clicking the mega-menu entry lands on the row too.
+  await page.goto(site + "/en", { waitUntil: "networkidle" });
+  await page.locator('#mainNav a[href="#services"]').first().hover();
+  await page.locator('#servicesMenu a[href="#service-workPermit"]').click();
+  await page.waitForTimeout(2000);
+  const clickTop = await page.locator("#service-workPermit h3").evaluate((el) => el.getBoundingClientRect().top);
+  check(`menu click lands on #service-workPermit (top=${Math.round(clickTop)}px)`, clickTop >= 85 && clickTop < 450);
+  await page.close();
+}
+
+// Hero headline sits 18–30% down the fold in every language.
+for (const p of pages) {
+  const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+  await page.goto(site + p.site, { waitUntil: "networkidle" });
+  const ratio = await page.locator("h1").evaluate((el) => el.getBoundingClientRect().top / window.innerHeight);
+  check(`${p.name}: hero H1 at ${(ratio * 100).toFixed(1)}% of the fold`, ratio >= 0.18 && ratio <= 0.3);
+  await page.close();
+}
+
+// Mobile action bar: visible, and never covers the footer at the bottom.
+{
+  const page = await browser.newPage({ viewport: { width: 375, height: 812 } });
+  await page.goto(site + "/en", { waitUntil: "networkidle" });
+  const bar = page.locator('a[href^="tel:"]').last().locator("xpath=..");
+  check("action bar visible at 375", await bar.isVisible());
+  await page.evaluate(() => window.scrollTo({ top: document.documentElement.scrollHeight, behavior: "instant" }));
+  await page.waitForTimeout(300);
+  const barTop = await bar.evaluate((el) => el.getBoundingClientRect().top);
+  const footerBottom = await page.locator("footer p").last().evaluate((el) => el.getBoundingClientRect().bottom);
+  check(`footer clear of action bar (text ${Math.round(footerBottom)} ≤ bar ${Math.round(barTop)})`, footerBottom <= barTop);
+  await page.locator('button[aria-controls="mainNav"]').click();
+  check("action bar hidden while menu open", !(await bar.isVisible()));
   await page.close();
 }
 

@@ -76,6 +76,13 @@ describe("Header services menu", () => {
     expect(item).toHaveClass("dismissed");
   });
 
+  it("returns focus to the Services link when Escape hides the mega menu", async () => {
+    const { dict, user } = setup();
+    screen.getByRole("link", { name: dict.serviceTitles.cfo }).focus();
+    await user.keyboard("{Escape}");
+    expect(screen.getByRole("link", { name: dict.nav.services })).toHaveFocus();
+  });
+
   it("re-arms the mega menu once the pointer leaves", async () => {
     const { dict, user, container } = setup();
     const item = container.querySelector(".hasMegaMenu")!;

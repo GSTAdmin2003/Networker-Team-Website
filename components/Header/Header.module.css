@@ -140,7 +140,11 @@
   box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08);
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.2s var(--ease-out), visibility 0.2s;
+  /* Hiding: fade, then drop visibility. Showing (below): visible at once, so a
+     fast Tab from "Services" lands in the menu instead of skipping it. */
+  transition:
+    opacity 0.15s ease,
+    visibility 0s linear 0.15s;
   z-index: 99;
 }
 
@@ -148,6 +152,9 @@
 .hasMegaMenu:not(.dismissed):focus-within .megaMenu {
   opacity: 1;
   visibility: visible;
+  transition:
+    opacity 0.2s var(--ease-out),
+    visibility 0s;
 }
 
 .hasMegaMenu:not(.dismissed):hover .arrow,

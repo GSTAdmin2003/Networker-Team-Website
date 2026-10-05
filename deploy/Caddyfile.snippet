@@ -1,0 +1,6 @@
+# Site block to APPEND to /opt/crm/deploy/Caddyfile.hetzner, then reload
+# Caddy. Replace the hostname with the real domain.
+team.example.com {
+	encode zstd gzip
+	reverse_proxy networker-team-website:80
+}

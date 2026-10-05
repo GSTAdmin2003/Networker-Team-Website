@@ -1,0 +1,28 @@
+# Production deploy for the Networker team site, self-hosted on the same
+# box as the CRM (networker-prod). Own compose project in its own
+# directory, sharing only the CRM's Caddy for TLS/routing -- same pattern
+# as networker-website and mobipolice.
+#
+# Deploy: bash deploy.sh
+
+services:
+  web:
+    build: .
+    restart: unless-stopped
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    expose:
+      - "80"
+    networks:
+      # The CRM's Caddy lives on crm_default (compose project dir /opt/crm);
+      # joining it lets Caddy reverse_proxy to this container by name.
+      crm_default:
+        aliases:
+          - networker-team-website
+
+networks:
+  crm_default:
+    external: true

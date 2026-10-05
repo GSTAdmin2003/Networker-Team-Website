@@ -1,0 +1,7 @@
+.git
+deploy/Caddyfile.snippet
+deploy.sh
+docker-compose.yml
+README.md
+STATUS.md
+.env*

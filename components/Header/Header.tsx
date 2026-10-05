@@ -8,7 +8,8 @@ import { ExternalLink } from "@/components/ExternalLink";
 import { serviceIcons } from "@/components/icons";
 import type { HeaderDictionary } from "@/lib/i18n";
 import { localeLabels, localePath, type Locale } from "@/lib/i18n/config";
-import { brand, contacts, serviceIds } from "@/lib/site";
+import { brand, contacts, serviceAnchor, serviceIds } from "@/lib/site";
+import { useActiveSection, type SectionId } from "@/lib/useActiveSection";
 import styles from "./Header.module.css";
 
 // Order of the pills matches the original site.
@@ -31,6 +32,18 @@ export function Header({ locale, dict }: { locale: Locale; dict: HeaderDictionar
     document.addEventListener("keydown", onKeyDown);
     return () => document.removeEventListener("keydown", onKeyDown);
   }, []);
+
+  // Lets page-level CSS react to the open menu (the mobile action bar hides).
+  useEffect(() => {
+    const root = document.documentElement;
+    if (menuOpen) root.setAttribute("data-menu-open", "");
+    else root.removeAttribute("data-menu-open");
+    return () => root.removeAttribute("data-menu-open");
+  }, [menuOpen]);
+
+  const active = useActiveSection();
+  const current = (section: SectionId) =>
+    active === section ? { "aria-current": "location" as const, className: styles.active } : {};
 
   function closeAll() {
     setMenuOpen(false);
@@ -78,7 +91,7 @@ export function Header({ locale, dict }: { locale: Locale; dict: HeaderDictionar
         <nav id="mainNav" className={`${styles.nav} ${menuOpen ? styles.navOpen : ""}`}>
           <ul className={styles.navList}>
             <li className={styles.navItem}>
-              <a href="#top" onClick={closeAll}>
+              <a href="#top" onClick={closeAll} {...current("hero")}>
                 {dict.nav.home}
               </a>
             </li>
@@ -88,7 +101,7 @@ export function Header({ locale, dict }: { locale: Locale; dict: HeaderDictionar
               onBlur={onServicesBlur}
             >
               <div className={styles.servicesRow}>
-                <a href="#services" onClick={closeAll}>
+                <a href="#services" onClick={closeAll} {...current("services")}>
                   {dict.nav.services}
                   <FaChevronDown className={styles.arrow} aria-hidden />
                 </a>
@@ -111,7 +124,7 @@ export function Header({ locale, dict }: { locale: Locale; dict: HeaderDictionar
                       const Icon = serviceIcons[id];
                       return (
                         <li key={id}>
-                          <a href="#services" onClick={closeAll}>
+                          <a href={`#${serviceAnchor(id)}`} onClick={closeAll}>
                             <Icon aria-hidden /> {dict.serviceTitles[id]}
                           </a>
                         </li>
@@ -122,12 +135,12 @@ export function Header({ locale, dict }: { locale: Locale; dict: HeaderDictionar
               </div>
             </li>
             <li className={styles.navItem}>
-              <a href="#about" onClick={closeAll}>
+              <a href="#about" onClick={closeAll} {...current("about")}>
                 {dict.nav.about}
               </a>
             </li>
             <li className={styles.navItem}>
-              <a href="#contact" onClick={closeAll}>
+              <a href="#contact" onClick={closeAll} {...current("contact")}>
                 {dict.nav.contact}
               </a>
             </li>
@@ -141,6 +154,7 @@ export function Header({ locale, dict }: { locale: Locale; dict: HeaderDictionar
                 key={l}
                 href={localePath(l)}
                 hrefLang={l}
+                title={dict.languageNames[l]}
                 className={`${styles.langPill} ${l === locale ? styles.langActive : ""}`}
                 aria-current={l === locale ? "page" : undefined}
               >

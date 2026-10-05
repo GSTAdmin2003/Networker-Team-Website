@@ -27,6 +27,19 @@ describe("Header mobile menu", () => {
     expect(toggle).toHaveAttribute("aria-expanded", "false");
   });
 
+  it("flags the open menu on <html> only while it is open", async () => {
+    const { user, toggle, unmount } = setup();
+    const root = document.documentElement;
+    expect(root).not.toHaveAttribute("data-menu-open");
+    await user.click(toggle);
+    expect(root).toHaveAttribute("data-menu-open");
+    await user.click(toggle);
+    expect(root).not.toHaveAttribute("data-menu-open");
+    await user.click(toggle);
+    unmount();
+    expect(root).not.toHaveAttribute("data-menu-open");
+  });
+
   it("closes on Escape", async () => {
     const { user, toggle } = setup();
     await user.click(toggle);
@@ -45,8 +58,8 @@ describe("Header mobile menu", () => {
 describe("Header services menu", () => {
   it("lists every service and has a disclosure button", async () => {
     const { dict, user, container } = setup();
-    for (const title of Object.values(dict.serviceTitles)) {
-      expect(screen.getByRole("link", { name: title })).toHaveAttribute("href", "#services");
+    for (const [id, title] of Object.entries(dict.serviceTitles)) {
+      expect(screen.getByRole("link", { name: title })).toHaveAttribute("href", `#service-${id}`);
     }
     const disclosure = screen.getByRole("button", { name: dict.a11y.toggleServices });
     expect(disclosure).toHaveAttribute("aria-expanded", "false");
@@ -86,6 +99,7 @@ describe("Header language switch", () => {
     ]);
     expect(links[1]).toHaveAttribute("aria-current", "page");
     expect(links[0]).not.toHaveAttribute("aria-current");
+    expect(links.map((a) => a.getAttribute("title"))).toEqual(["ქართული", "Русский", "English"]);
   });
 
   it("opens messengers safely in a new tab", () => {

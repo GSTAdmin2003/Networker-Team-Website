@@ -1,6 +1,6 @@
 import { FaEnvelope, FaLocationDot, FaPhone } from "react-icons/fa6";
 import type { Dictionary } from "@/lib/i18n";
-import { brand, contacts, serviceIds } from "@/lib/site";
+import { brand, contacts, serviceAnchor, serviceIds } from "@/lib/site";
 import styles from "./Footer.module.css";
 
 export function Footer({ dict }: { dict: Dictionary }) {
@@ -39,7 +39,7 @@ export function Footer({ dict }: { dict: Dictionary }) {
           <ul className={styles.links}>
             {serviceIds.map((id) => (
               <li key={id}>
-                <a href="#services">{services.items[id].footerLabel}</a>
+                <a href={`#${serviceAnchor(id)}`}>{services.items[id].footerLabel}</a>
               </li>
             ))}
           </ul>

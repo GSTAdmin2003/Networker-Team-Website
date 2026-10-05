@@ -30,11 +30,12 @@ echo "--- Starting ---"
 docker compose --env-file .env up -d --remove-orphans
 
 # Checked from inside the container so nothing else on the host can answer,
-# and the body must be our page, not just any 200.
+# and the body must be our page, not just any 200. 127.0.0.1, not
+# "localhost": busybox wget resolves that to ::1, but Next binds IPv4 only.
 echo "--- Waiting for web to respond ---"
 healthy=0
 for _ in $(seq 1 20); do
-	if docker compose --env-file .env exec -T web wget -qO- http://localhost:3000/ 2>/dev/null | grep -q NETWORKER; then
+	if docker compose --env-file .env exec -T web wget -qO- http://127.0.0.1:3000/ 2>/dev/null | grep -q NETWORKER; then
 		healthy=1
 		break
 	fi

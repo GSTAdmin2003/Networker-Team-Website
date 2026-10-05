@@ -2,13 +2,14 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState, type FocusEvent } from "react";
+import { useEffect, useRef, useState, type FocusEvent } from "react";
 import { FaBars, FaChevronDown, FaTelegram, FaWhatsapp, FaXmark } from "react-icons/fa6";
 import { ExternalLink } from "@/components/ExternalLink";
 import { serviceIcons } from "@/components/icons";
 import type { HeaderDictionary } from "@/lib/i18n";
 import { localeLabels, localePath, type Locale } from "@/lib/i18n/config";
-import { brand, contacts, serviceIds } from "@/lib/site";
+import { brand, contacts, serviceAnchor, serviceIds } from "@/lib/site";
+import { useActiveSection, type SectionId } from "@/lib/useActiveSection";
 import styles from "./Header.module.css";
 
 // Order of the pills matches the original site.
@@ -21,9 +22,17 @@ export function Header({ locale, dict }: { locale: Locale; dict: HeaderDictionar
   // lets Escape (or picking a link) hide it until the next fresh interaction.
   const [megaDismissed, setMegaDismissed] = useState(false);
 
+  const servicesItem = useRef<HTMLLIElement>(null);
+  const servicesLink = useRef<HTMLAnchorElement>(null);
+
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
       if (event.key !== "Escape") return;
+      // Hiding the menu would leave a focused link invisible and the browser
+      // would drop focus to <body>; hand it back to the trigger instead.
+      if (servicesItem.current?.contains(document.activeElement)) {
+        servicesLink.current?.focus();
+      }
       setMenuOpen(false);
       setServicesOpen(false);
       setMegaDismissed(true);
@@ -31,6 +40,18 @@ export function Header({ locale, dict }: { locale: Locale; dict: HeaderDictionar
     document.addEventListener("keydown", onKeyDown);
     return () => document.removeEventListener("keydown", onKeyDown);
   }, []);
+
+  // Lets page-level CSS react to the open menu (the mobile action bar hides).
+  useEffect(() => {
+    const root = document.documentElement;
+    if (menuOpen) root.setAttribute("data-menu-open", "");
+    else root.removeAttribute("data-menu-open");
+    return () => root.removeAttribute("data-menu-open");
+  }, [menuOpen]);
+
+  const active = useActiveSection();
+  const current = (section: SectionId) =>
+    active === section ? { "aria-current": "location" as const, className: styles.active } : {};
 
   function closeAll() {
     setMenuOpen(false);
@@ -78,17 +99,23 @@ export function Header({ locale, dict }: { locale: Locale; dict: HeaderDictionar
         <nav id="mainNav" className={`${styles.nav} ${menuOpen ? styles.navOpen : ""}`}>
           <ul className={styles.navList}>
             <li className={styles.navItem}>
-              <a href="#top" onClick={closeAll}>
+              <a href="#top" onClick={closeAll} {...current("hero")}>
                 {dict.nav.home}
               </a>
             </li>
             <li
+              ref={servicesItem}
               className={megaClasses}
               onPointerLeave={() => setMegaDismissed(false)}
               onBlur={onServicesBlur}
             >
               <div className={styles.servicesRow}>
-                <a href="#services" onClick={closeAll}>
+                <a
+                  ref={servicesLink}
+                  href="#services"
+                  onClick={closeAll}
+                  {...current("services")}
+                >
                   {dict.nav.services}
                   <FaChevronDown className={styles.arrow} aria-hidden />
                 </a>
@@ -111,7 +138,7 @@ export function Header({ locale, dict }: { locale: Locale; dict: HeaderDictionar
                       const Icon = serviceIcons[id];
                       return (
                         <li key={id}>
-                          <a href="#services" onClick={closeAll}>
+                          <a href={`#${serviceAnchor(id)}`} onClick={closeAll}>
                             <Icon aria-hidden /> {dict.serviceTitles[id]}
                           </a>
                         </li>
@@ -122,12 +149,12 @@ export function Header({ locale, dict }: { locale: Locale; dict: HeaderDictionar
               </div>
             </li>
             <li className={styles.navItem}>
-              <a href="#about" onClick={closeAll}>
+              <a href="#about" onClick={closeAll} {...current("about")}>
                 {dict.nav.about}
               </a>
             </li>
             <li className={styles.navItem}>
-              <a href="#contact" onClick={closeAll}>
+              <a href="#contact" onClick={closeAll} {...current("contact")}>
                 {dict.nav.contact}
               </a>
             </li>
@@ -141,6 +168,7 @@ export function Header({ locale, dict }: { locale: Locale; dict: HeaderDictionar
                 key={l}
                 href={localePath(l)}
                 hrefLang={l}
+                title={dict.languageNames[l]}
                 className={`${styles.langPill} ${l === locale ? styles.langActive : ""}`}
                 aria-current={l === locale ? "page" : undefined}
               >

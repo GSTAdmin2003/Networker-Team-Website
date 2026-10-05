@@ -53,6 +53,10 @@ describe("dictionaries", () => {
     expect(Object.keys(items).sort()).toEqual([...serviceIds].sort());
   });
 
+  it.each(locales)("%s has exactly three about principles", (locale) => {
+    expect(getDictionary(locale).about.principles).toHaveLength(3);
+  });
+
   it("writes the Russian address entirely in Cyrillic", () => {
     const { address } = getDictionary("ru").contact;
     expect(address.value).toBe("Тбилиси, ул. Важа-Пшавела 45");
@@ -65,5 +69,6 @@ describe("dictionaries", () => {
     expect(header.nav).toBe(dict.nav);
     expect(header.a11y).toBe(dict.a11y);
     expect(header.serviceTitles.cfo).toBe(dict.services.items.cfo.title);
+    expect(header.languageNames).toBe(dict.languageNames);
   });
 });

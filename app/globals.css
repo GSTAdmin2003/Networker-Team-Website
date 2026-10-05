@@ -14,7 +14,12 @@
   --border-color: #e2e8f0;
   --brand-gradient: linear-gradient(135deg, var(--brand-blue) 0%, var(--brand-green) 100%);
   --header-height: 85px;
-  --transition: all 0.3s ease;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --shadow-panel: 0 1px 2px rgba(11, 25, 44, 0.06), 0 12px 32px -8px rgba(11, 25, 44, 0.18);
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --action-bar-height: calc(64px + env(safe-area-inset-bottom));
 }
 
 * {
@@ -55,9 +60,27 @@ button {
   outline-offset: 3px;
 }
 
-/* Keep anchored sections clear of the sticky header. */
-section[id] {
-  scroll-margin-top: var(--header-height);
+h1,
+h2 {
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+/* Keep anchored sections and service rows clear of the sticky header. */
+section[id],
+[id^="service-"] {
+  scroll-margin-top: calc(var(--header-height) + 16px);
+}
+
+/* Room for the fixed mobile action bar (components/ActionBar). */
+@media (max-width: 768px) {
+  html {
+    scroll-padding-bottom: var(--action-bar-height);
+  }
+
+  body {
+    padding-bottom: var(--action-bar-height);
+  }
 }
 
 .section-container {
@@ -84,13 +107,27 @@ section[id] {
 
 .btn-primary,
 .btn-secondary {
-  display: inline-block;
-  padding: 14px 30px;
-  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px 28px;
+  border-radius: var(--radius-sm);
   font-weight: 600;
   font-size: 15px;
-  transition: var(--transition);
+  line-height: 1.2;
   cursor: pointer;
+  transition:
+    transform 0.2s var(--ease-out),
+    box-shadow 0.2s var(--ease-out),
+    background-color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.btn-primary svg,
+.btn-secondary svg {
+  font-size: 18px;
+  flex-shrink: 0;
 }
 
 .btn-primary {
@@ -100,8 +137,13 @@ section[id] {
 }
 
 .btn-primary:hover {
-  opacity: 0.9;
-  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(16, 185, 129, 0.38);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .btn-primary:hover {
+    transform: translateY(-2px);
+  }
 }
 
 .btn-secondary {

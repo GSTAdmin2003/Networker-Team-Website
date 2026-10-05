@@ -29,6 +29,16 @@ export const serviceIds = [
 
 export type ServiceId = (typeof serviceIds)[number];
 
+/** In-page anchor id of a service row. */
+export function serviceAnchor(id: ServiceId): string {
+  return `service-${id}`;
+}
+
+/** WhatsApp chat link, optionally with a prefilled message. */
+export function whatsappUrl(text?: string): string {
+  return text ? `${contacts.whatsapp}?text=${encodeURIComponent(text)}` : contacts.whatsapp;
+}
+
 export const messengerIds = [
   "telegram",
   "whatsapp",

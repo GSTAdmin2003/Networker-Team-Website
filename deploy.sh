@@ -21,6 +21,9 @@ echo "=== Deploying networker-team-website ==="
 if [ "${SKIP_PULL:-0}" != "1" ]; then
 	echo "--- Pulling ---"
 	git pull origin "$(git branch --show-current)"
+	# The pull may have changed this script; bash reads scripts lazily, so
+	# re-run the new version from the top instead of finishing the old one.
+	exec env SKIP_PULL=1 bash "$0" "$@"
 fi
 
 echo "--- Building ---"

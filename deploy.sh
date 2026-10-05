@@ -11,6 +11,11 @@ set -euo pipefail
 DEPLOY_DIR="${DEPLOY_DIR:-/opt/networker-team-website}"
 cd "$DEPLOY_DIR"
 
+if [ ! -f .env ]; then
+	echo "No .env at ${DEPLOY_DIR}/.env -- copy .env.example and fill it in."
+	exit 1
+fi
+
 echo "=== Deploying networker-team-website ==="
 
 if [ "${SKIP_PULL:-0}" != "1" ]; then
@@ -19,18 +24,33 @@ if [ "${SKIP_PULL:-0}" != "1" ]; then
 fi
 
 echo "--- Building ---"
-docker compose build
+docker compose --env-file .env build
 
 echo "--- Starting ---"
-docker compose up -d --remove-orphans
+docker compose --env-file .env up -d --remove-orphans
 
+# Checked from inside the container so nothing else on the host can answer,
+# and the body must be our page, not just any 200.
 echo "--- Waiting for web to respond ---"
-for _ in $(seq 1 10); do
-	if docker compose exec -T web wget -qO- http://localhost/ > /dev/null 2>&1; then
-		echo "web: responding"
+healthy=0
+for _ in $(seq 1 20); do
+	if docker compose --env-file .env exec -T web wget -qO- http://localhost:3000/ 2>/dev/null | grep -q NETWORKER; then
+		healthy=1
 		break
 	fi
-	sleep 2
+	sleep 3
 done
 
-docker compose ps
+docker compose --env-file .env ps
+
+if [ "$healthy" != "1" ]; then
+	echo "web: NOT responding -- check: docker compose --env-file .env logs web"
+	exit 1
+fi
+
+cat <<-EOF
+
+	=== Deploy complete ===
+	Logs:    docker compose --env-file .env logs -f web
+	Status:  docker compose --env-file .env ps
+EOF

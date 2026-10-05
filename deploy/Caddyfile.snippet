@@ -1,6 +1,29 @@
-# Site block to APPEND to /opt/crm/deploy/Caddyfile.hetzner, then reload
-# Caddy. Replace the hostname with the real domain.
-team.example.com {
-	encode zstd gzip
-	reverse_proxy networker-team-website:80
+# Site blocks to APPEND to /opt/crm/deploy/Caddyfile.hetzner, then reload
+# Caddy. DNS for both names must point at the box as DNS-only (grey cloud)
+# records so Caddy can obtain the certificates itself, like networkercrm.ge.
+#
+# Proxies to the full container name: bare aliases ("web") are ambiguous on
+# the shared crm_default network.
+networkerteam.ge {
+	encode gzip
+
+	log {
+		output stdout
+	}
+
+	reverse_proxy networker-team-website-web-1:3000 {
+		header_up X-Forwarded-Proto {scheme}
+		header_up X-Real-IP {remote_host}
+	}
+
+	header {
+		Strict-Transport-Security "max-age=31536000"
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		-Server
+	}
+}
+
+www.networkerteam.ge {
+	redir https://networkerteam.ge{uri} permanent
 }

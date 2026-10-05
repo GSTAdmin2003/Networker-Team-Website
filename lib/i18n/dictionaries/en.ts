@@ -18,12 +18,18 @@ export const en: Dictionary = {
     titleHighlight: "Accounting & Consulting",
     titleAfter: "Services for Your Business",
     lead: "We guarantee full transparency, efficiency, and complete compliance with legislation. Entrust your finances to professionals.",
-    ctaPrimary: "Request Consultation",
-    ctaSecondary: "Learn More",
+    ctaPrimary: "Write on WhatsApp",
+    ctaSecondary: "See services",
+    panelTitle: "Talk to us directly",
+    chat: "Open chat",
   },
   services: {
     title: "What We Offer Our Clients",
     subtitle: "High standards of accounting and consulting services",
+    prompt: "Not sure which service you need? Tell us about your business and we will suggest the right one.",
+    askLink: "Ask about this",
+    orCall: "Call us",
+    orTelegram: "Write on Telegram",
     items: {
       company: {
         title: "Company Registration",
@@ -64,10 +70,18 @@ export const en: Dictionary = {
     title: "About Us",
     subtitle: "Experience and reliability for your success",
     body: "Our team consists of highly qualified and certified accountants with years of experience working with companies across various industries. Our goal is to minimize your tax risks and allow you to fully focus on the growth and development of your business.",
+    principles: [
+      { title: "Transparency", text: "You always know what we are doing with your books and why." },
+      { title: "Efficiency", text: "Registrations, filings and answers on time, without chasing." },
+      { title: "Compliance", text: "Your reporting follows current Georgian legislation." },
+    ],
   },
   contact: {
     title: "Contact Us",
     subtitle: "We are ready to answer any of your questions",
+    primaryTitle: "Fastest way to reach us",
+    secondaryTitle: "Other ways",
+    socialLabel: "Follow us",
     address: { label: "Address", value: "Vaja Pshavela 45, Tbilisi" },
     phoneLabel: "Phone",
     emailLabel: "Email",
@@ -93,6 +107,12 @@ export const en: Dictionary = {
     body: "The page you are looking for does not exist.",
     back: "Back to the home page",
   },
+  actionBar: { call: "Call", whatsapp: "WhatsApp" },
+  whatsapp: {
+    greeting: "Hello! I would like a consultation.",
+    aboutService: "Hello! I am interested in:",
+  },
+  languageNames: { ka: "ქართული", en: "English", ru: "Русский" },
   a11y: {
     openMenu: "Open menu",
     closeMenu: "Close menu",

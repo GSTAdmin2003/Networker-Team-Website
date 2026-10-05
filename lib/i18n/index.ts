@@ -15,6 +15,7 @@ export function toHeaderDictionary(dict: Dictionary): HeaderDictionary {
   return {
     nav: dict.nav,
     a11y: dict.a11y,
+    languageNames: dict.languageNames,
     serviceTitles: Object.fromEntries(
       serviceIds.map((id) => [id, dict.services.items[id].title]),
     ) as HeaderDictionary["serviceTitles"],

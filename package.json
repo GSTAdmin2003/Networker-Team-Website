@@ -8,7 +8,7 @@
     "postbuild": "rm -rf .next/standalone/public .next/standalone/.next/static && cp -r public .next/standalone/public && cp -r .next/static .next/standalone/.next/static",
     "start": "node .next/standalone/server.js",
     "lint": "eslint .",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "next typegen && tsc --noEmit",
     "test": "vitest run",
     "smoke": "bash scripts/smoke.sh",
     "screenshots": "node scripts/screenshots.mjs"

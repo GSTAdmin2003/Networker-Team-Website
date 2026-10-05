@@ -1,4 +1,7 @@
 import type { MessengerId, ServiceId } from "@/lib/site";
+import type { Locale } from "./config";
+
+type Principle = { title: string; text: string };
 
 export type Dictionary = {
   meta: { title: string; description: string };
@@ -14,12 +17,20 @@ export type Dictionary = {
     titleHighlight: string;
     titleAfter: string;
     lead: string;
+    /** "Write on WhatsApp" — reused everywhere that intent appears. */
     ctaPrimary: string;
     ctaSecondary: string;
+    panelTitle: string;
+    /** Value shown next to the messenger rows in the hero panel. */
+    chat: string;
   };
   services: {
     title: string;
     subtitle: string;
+    prompt: string;
+    askLink: string;
+    orCall: string;
+    orTelegram: string;
     items: Record<
       ServiceId,
       {
@@ -30,10 +41,18 @@ export type Dictionary = {
       }
     >;
   };
-  about: { title: string; subtitle: string; body: string };
+  about: {
+    title: string;
+    subtitle: string;
+    body: string;
+    principles: [Principle, Principle, Principle];
+  };
   contact: {
     title: string;
     subtitle: string;
+    primaryTitle: string;
+    secondaryTitle: string;
+    socialLabel: string;
     address: { label: string; value: string };
     phoneLabel: string;
     emailLabel: string;
@@ -48,6 +67,15 @@ export type Dictionary = {
     rights: string;
   };
   notFound: { title: string; body: string; back: string };
+  actionBar: { call: string; whatsapp: string };
+  whatsapp: {
+    /** General prefilled WhatsApp message. */
+    greeting: string;
+    /** Prefix before a service title, e.g. "Hello! I'm interested in:". */
+    aboutService: string;
+  };
+  /** Full language names, for the language switcher's tooltips. */
+  languageNames: Record<Locale, string>;
   a11y: {
     openMenu: string;
     closeMenu: string;
@@ -62,4 +90,5 @@ export type HeaderDictionary = {
   nav: Dictionary["nav"];
   a11y: Dictionary["a11y"];
   serviceTitles: Record<ServiceId, string>;
+  languageNames: Dictionary["languageNames"];
 };

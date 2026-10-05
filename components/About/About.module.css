@@ -1,0 +1,47 @@
+.section {
+  padding: 100px 20px;
+  background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+  border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.content {
+  max-width: 900px;
+  margin: 0 auto;
+  background: var(--white);
+  padding: 50px;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+  border: 1px solid var(--border-color);
+  text-align: center;
+  position: relative;
+}
+
+.badge {
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 45px;
+  height: 45px;
+  background: var(--brand-gradient);
+  color: var(--white);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);
+}
+
+.content p {
+  font-size: 18px;
+  color: #475569;
+  line-height: 1.8;
+}
+
+@media (max-width: 768px) {
+  .content {
+    padding: 30px 20px;
+  }
+}

@@ -1,0 +1,49 @@
+.hero {
+  background: linear-gradient(135deg, #0b192c 0%, #1e3d59 100%);
+  padding: 120px 20px;
+  text-align: center;
+  color: var(--white);
+}
+
+.container {
+  max-width: 850px;
+  margin: 0 auto;
+}
+
+.container h1 {
+  font-size: 46px;
+  font-weight: 800;
+  color: var(--white);
+  margin-bottom: 20px;
+  line-height: 1.25;
+}
+
+.container h1 span {
+  background: linear-gradient(135deg, #60a5fa 0%, #34d399 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.container p {
+  font-size: 19px;
+  color: #cbd5e1;
+  margin-bottom: 40px;
+  line-height: 1.6;
+}
+
+.buttons {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+@media (max-width: 768px) {
+  .container h1 {
+    font-size: 32px;
+  }
+
+  .buttons {
+    flex-direction: column;
+  }
+}

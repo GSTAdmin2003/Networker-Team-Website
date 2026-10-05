@@ -1,13 +1,16 @@
-# Production deploy for the Networker team site, self-hosted on the same
-# box as the CRM (networker-prod). Own compose project in its own
-# directory, sharing only the CRM's Caddy for TLS/routing -- same pattern
-# as networker-website and mobipolice.
+# Production deploy for the Networker team site (networkerteam.ge),
+# self-hosted on the same box as the CRM (networker-prod). Own compose
+# project in /opt/networker-team-website, sharing only the CRM's Caddy for
+# TLS/routing -- same pattern as networker-website and mobipolice.
 #
 # Deploy: bash deploy.sh
 
 services:
   web:
-    build: .
+    build:
+      context: .
+      args:
+        NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:?NEXT_PUBLIC_SITE_URL must be set}
     restart: unless-stopped
     logging:
       driver: json-file
@@ -15,13 +18,12 @@ services:
         max-size: "10m"
         max-file: "3"
     expose:
-      - "80"
+      - "3000"
     networks:
-      # The CRM's Caddy lives on crm_default (compose project dir /opt/crm);
-      # joining it lets Caddy reverse_proxy to this container by name.
-      crm_default:
-        aliases:
-          - networker-team-website
+      # The CRM's Caddy lives on crm_default (compose project dir /opt/crm).
+      # Caddy proxies to the full container name, networker-team-website-web-1,
+      # because bare aliases like "web" are ambiguous on this shared network.
+      - crm_default
 
 networks:
   crm_default:

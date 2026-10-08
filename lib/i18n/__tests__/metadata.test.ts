@@ -33,4 +33,13 @@ describe("buildMetadata", () => {
   it("resolves relative URLs against the configured site origin", () => {
     expect(String(buildMetadata("ka").metadataBase)).toBe("http://localhost:3000/");
   });
+
+  it("builds per-page canonicals and alternates for legal pages", () => {
+    const page = { path: "/privacy", title: "Privacy Policy", description: "d" };
+    expect(buildMetadata("ka", page).alternates).toEqual({
+      canonical: "/privacy",
+      languages: { ka: "/privacy", en: "/en/privacy", ru: "/ru/privacy", "x-default": "/privacy" },
+    });
+    expect(buildMetadata("en", page).title).toBe("Privacy Policy — NETWORKER");
+  });
 });

@@ -1,7 +1,17 @@
-import type { MessengerId, ServiceId } from "@/lib/site";
+import type { LegalPageId, MessengerId, ServiceId } from "@/lib/site";
 import type { Locale } from "./config";
 
 type Principle = { title: string; text: string };
+
+type LegalSection = { heading: string; body: string[] };
+
+type LegalPage = {
+  title: string;
+  /** Meta description. */
+  description: string;
+  intro: string;
+  sections: LegalSection[];
+};
 
 export type Dictionary = {
   meta: { title: string; description: string };
@@ -65,6 +75,16 @@ export type Dictionary = {
     services: string;
     contactInfo: string;
     rights: string;
+  };
+  /** Registry details of the operating entity and the legal pages. */
+  legal: {
+    companyTitle: string;
+    /** Registered name, as written in this language. */
+    companyName: string;
+    idLabel: string;
+    backHome: string;
+    updated: string;
+    pages: Record<LegalPageId, LegalPage>;
   };
   notFound: { title: string; body: string; back: string };
   actionBar: { call: string; whatsapp: string };

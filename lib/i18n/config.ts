@@ -8,9 +8,13 @@ export function isLocale(value: string): value is Locale {
   return (locales as readonly string[]).includes(value);
 }
 
-/** Canonical path of a locale's home page; Georgian lives at the root. */
-export function localePath(locale: Locale): string {
-  return locale === defaultLocale ? "/" : `/${locale}`;
+/**
+ * Canonical path of a locale's page (home page by default); Georgian lives at
+ * the root, so `/ka/privacy` is served as `/privacy`.
+ */
+export function localePath(locale: Locale, path = ""): string {
+  if (locale === defaultLocale) return path || "/";
+  return `/${locale}${path}`;
 }
 
 /** Labels shown on the language switcher. */

@@ -21,7 +21,9 @@ status() { curl -s -o /dev/null -w '%{http_code}' "$BASE$1"; }
 location() { curl -s -o /dev/null -w '%{redirect_url}' "$BASE$1"; }
 
 # path|lang|canonical  ("|" because the canonical URL itself contains ":")
-for spec in "/|ka|$ORIGIN" "/en|en|$ORIGIN/en" "/ru|ru|$ORIGIN/ru"; do
+for spec in "/|ka|$ORIGIN" "/en|en|$ORIGIN/en" "/ru|ru|$ORIGIN/ru" \
+	"/privacy|ka|$ORIGIN/privacy" "/en/privacy|en|$ORIGIN/en/privacy" "/ru/privacy|ru|$ORIGIN/ru/privacy" \
+	"/terms|ka|$ORIGIN/terms" "/en/terms|en|$ORIGIN/en/terms" "/ru/terms|ru|$ORIGIN/ru/terms"; do
 	IFS="|" read -r path lang canonical <<<"$spec"
 	body="$(curl -s "$BASE$path")"
 	check "$path -> 200" "$([ "$(status "$path")" = 200 ] && echo 1)"
@@ -31,6 +33,8 @@ for spec in "/|ka|$ORIGIN" "/en|en|$ORIGIN/en" "/ru|ru|$ORIGIN/ru"; do
 done
 
 check "/ka -> 308 /" "$([ "$(status /ka)" = 308 ] && [[ "$(location /ka)" == */ ]] && echo 1)"
+check "/ka/privacy -> 308 /privacy" "$([ "$(status /ka/privacy)" = 308 ] && [[ "$(location /ka/privacy)" == */privacy ]] && echo 1)"
+check "/en/privacy has company ID" "$(curl -s "$BASE/en/privacy" | grep -q 405813767 && echo 1)"
 check "/index.html -> 308 /" "$([ "$(status /index.html)" = 308 ] && echo 1)"
 check "/index_en.html -> 308 /en" "$([ "$(status /index_en.html)" = 308 ] && [[ "$(location /index_en.html)" == */en ]] && echo 1)"
 check "/index_ru.html -> 308 /ru" "$([ "$(status /index_ru.html)" = 308 ] && [[ "$(location /index_ru.html)" == */ru ]] && echo 1)"

@@ -98,6 +98,14 @@ export function Contact({ dict }: { dict: Dictionary }) {
           <dl className={styles.details}>
             <div>
               <dt>
+                <FaPhone aria-hidden /> {contact.phoneLabel}
+              </dt>
+              <dd>
+                <a href={contacts.phone2.href}>{contacts.phone2.display}</a>
+              </dd>
+            </div>
+            <div>
+              <dt>
                 <FaEnvelope aria-hidden /> {contact.emailLabel}
               </dt>
               <dd>

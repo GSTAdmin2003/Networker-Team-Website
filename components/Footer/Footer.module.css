@@ -42,6 +42,13 @@
   line-height: 1.6;
 }
 
+.company {
+  margin-top: 15px;
+  color: #94a3b8;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
 .container h4 {
   font-size: 16px;
   font-weight: 700;
@@ -89,6 +96,23 @@
   text-align: center;
   color: #94a3b8;
   font-size: 13px;
+}
+
+.legalLinks {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px 24px;
+  margin-bottom: 12px;
+}
+
+.legalLinks a {
+  color: #94a3b8;
+  transition: color 0.15s ease;
+}
+
+.legalLinks a:hover {
+  color: var(--white);
 }
 
 @media (max-width: 992px) {

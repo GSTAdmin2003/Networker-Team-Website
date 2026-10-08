@@ -1,10 +1,19 @@
+import Link from "next/link";
 import { FaEnvelope, FaLocationDot, FaPhone } from "react-icons/fa6";
 import type { Dictionary } from "@/lib/i18n";
-import { brand, contacts, serviceAnchor, serviceIds } from "@/lib/site";
+import { localePath, type Locale } from "@/lib/i18n/config";
+import { brand, company, contacts, legalPages, serviceAnchor, serviceIds } from "@/lib/site";
 import styles from "./Footer.module.css";
 
-export function Footer({ dict }: { dict: Dictionary }) {
-  const { footer, nav, services, contact } = dict;
+type Props = {
+  dict: Dictionary;
+  locale: Locale;
+  /** Prefix for the section anchors: empty on the home page, its path elsewhere. */
+  home?: string;
+};
+
+export function Footer({ dict, locale, home = "" }: Props) {
+  const { footer, nav, services, contact, legal } = dict;
   return (
     <footer className={styles.footer}>
       <div className={styles.container}>
@@ -14,22 +23,27 @@ export function Footer({ dict }: { dict: Dictionary }) {
             <span className={styles.brandSubtitle}>{brand.subtitle}</span>
           </div>
           <p className={styles.desc}>{footer.description}</p>
+          <p className={styles.company}>
+            {legal.companyName}
+            <br />
+            {legal.idLabel}: {company.id}
+          </p>
         </div>
 
         <div>
           <h4>{footer.navigation}</h4>
           <ul className={styles.links}>
             <li>
-              <a href="#top">{nav.home}</a>
+              <a href={`${home}#top`}>{nav.home}</a>
             </li>
             <li>
-              <a href="#services">{nav.services}</a>
+              <a href={`${home}#services`}>{nav.services}</a>
             </li>
             <li>
-              <a href="#about">{nav.about}</a>
+              <a href={`${home}#about`}>{nav.about}</a>
             </li>
             <li>
-              <a href="#contact">{nav.contact}</a>
+              <a href={`${home}#contact`}>{nav.contact}</a>
             </li>
           </ul>
         </div>
@@ -39,7 +53,7 @@ export function Footer({ dict }: { dict: Dictionary }) {
           <ul className={styles.links}>
             {serviceIds.map((id) => (
               <li key={id}>
-                <a href={`#${serviceAnchor(id)}`}>{services.items[id].footerLabel}</a>
+                <a href={`${home}#${serviceAnchor(id)}`}>{services.items[id].footerLabel}</a>
               </li>
             ))}
           </ul>
@@ -55,6 +69,9 @@ export function Footer({ dict }: { dict: Dictionary }) {
               <FaPhone aria-hidden /> <a href={contacts.phone.href}>{contacts.phone.display}</a>
             </li>
             <li>
+              <FaPhone aria-hidden /> <a href={contacts.phone2.href}>{contacts.phone2.display}</a>
+            </li>
+            <li>
               <FaEnvelope aria-hidden /> <a href={contacts.email.href}>{contacts.email.display}</a>
             </li>
           </ul>
@@ -62,8 +79,15 @@ export function Footer({ dict }: { dict: Dictionary }) {
       </div>
 
       <div className={styles.bottom}>
+        <ul className={styles.legalLinks}>
+          {legalPages.map((id) => (
+            <li key={id}>
+              <Link href={localePath(locale, `/${id}`)}>{legal.pages[id].title}</Link>
+            </li>
+          ))}
+        </ul>
         <p>
-          &copy; {new Date().getFullYear()} {footer.rights}
+          &copy; {new Date().getFullYear()} {legal.companyName}. {footer.rights}
         </p>
       </div>
     </footer>

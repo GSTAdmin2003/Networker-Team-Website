@@ -25,6 +25,8 @@ describe("locale config", () => {
     expect(localePath("ka")).toBe("/");
     expect(localePath("en")).toBe("/en");
     expect(localePath("ru")).toBe("/ru");
+    expect(localePath("ka", "/terms")).toBe("/terms");
+    expect(localePath("en", "/terms")).toBe("/en/terms");
   });
 
   it("recognises only supported locales", () => {

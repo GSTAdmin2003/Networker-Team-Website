@@ -103,7 +103,7 @@ describe("About", () => {
 
 describe("Footer", () => {
   it("links phone and email and lists every service", () => {
-    render(<Footer dict={dict} />);
+    render(<Footer dict={dict} locale="en" />);
     const footer = screen.getByRole("contentinfo");
     expect(within(footer).getByRole("link", { name: /597 14 72 10/ })).toHaveAttribute(
       "href",
@@ -116,5 +116,34 @@ describe("Footer", () => {
     for (const id of serviceIds) {
       expect(within(footer).getByText(dict.services.items[id].footerLabel)).toBeInTheDocument();
     }
+  });
+
+  it("shows the registered company details and both phone numbers", () => {
+    render(<Footer dict={dict} locale="en" />);
+    const footer = screen.getByRole("contentinfo");
+    expect(footer).toHaveTextContent("LLC Networker Team");
+    expect(footer).toHaveTextContent("Identification code: 405813767");
+    expect(within(footer).getByRole("link", { name: /551 52 93 99/ })).toHaveAttribute(
+      "href",
+      "tel:+995551529399",
+    );
+  });
+
+  it("links the legal pages in the current locale", () => {
+    render(<Footer dict={dict} locale="en" />);
+    expect(screen.getByRole("link", { name: "Privacy Policy" })).toHaveAttribute("href", "/en/privacy");
+    expect(screen.getByRole("link", { name: "Terms of Use" })).toHaveAttribute("href", "/en/terms");
+  });
+
+  it("keeps Georgian legal pages at the root and anchors relative to home", () => {
+    render(<Footer dict={getDictionary("ka")} locale="ka" home="/" />);
+    expect(screen.getByRole("link", { name: "კონფიდენციალურობის პოლიტიკა" })).toHaveAttribute(
+      "href",
+      "/privacy",
+    );
+    expect(screen.getByRole("link", { name: getDictionary("ka").nav.services })).toHaveAttribute(
+      "href",
+      "/#services",
+    );
   });
 });

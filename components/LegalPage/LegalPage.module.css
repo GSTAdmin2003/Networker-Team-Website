@@ -1,0 +1,150 @@
+.header {
+  background: var(--white);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.headerInner {
+  max-width: 1200px;
+  height: var(--header-height);
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brandText {
+  display: flex;
+  flex-direction: column;
+}
+
+.brandTitle {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--primary-color);
+  letter-spacing: 0.5px;
+  line-height: 1.1;
+}
+
+.brandSubtitle {
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--brand-green);
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+
+.langs {
+  display: flex;
+  gap: 4px;
+}
+
+.langs a {
+  display: block;
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-muted);
+  transition: color 0.15s ease, background-color 0.15s ease;
+}
+
+.langs a:hover,
+.langs a[aria-current="page"] {
+  color: var(--primary-color);
+  background: var(--bg-light);
+}
+
+.main {
+  padding: 56px 20px 96px;
+}
+
+.article {
+  max-width: 760px;
+  margin: 0 auto;
+  line-height: 1.7;
+}
+
+.back {
+  display: inline-block;
+  margin-bottom: 24px;
+  font-size: 14px;
+  color: var(--brand-blue);
+}
+
+.back:hover {
+  text-decoration: underline;
+}
+
+.article h1 {
+  font-size: 34px;
+  font-weight: 800;
+  color: var(--primary-color);
+  line-height: 1.2;
+}
+
+.updated {
+  margin-top: 8px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.intro {
+  margin: 24px 0 8px;
+  font-size: 17px;
+}
+
+.article h2 {
+  margin: 32px 0 8px;
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--primary-color);
+}
+
+.article section p + p {
+  margin-top: 10px;
+}
+
+.company {
+  margin-top: 40px;
+  padding: 24px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  background: var(--bg-light);
+}
+
+.company h2 {
+  margin-top: 0;
+}
+
+.company dt {
+  margin-top: 12px;
+  font-weight: 700;
+  color: var(--primary-color);
+}
+
+.company a {
+  color: var(--brand-blue);
+}
+
+.company a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+  .main {
+    padding: 40px 20px 72px;
+  }
+
+  .article h1 {
+    font-size: 28px;
+  }
+}

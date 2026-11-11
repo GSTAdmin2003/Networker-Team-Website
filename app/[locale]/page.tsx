@@ -30,7 +30,7 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
         <About dict={dict} />
         <Contact dict={dict} />
       </main>
-      <Footer dict={dict} />
+      <Footer dict={dict} locale={locale} />
       <ActionBar dict={dict} />
     </>
   );

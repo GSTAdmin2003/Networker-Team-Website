@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { legalPages } from "./lib/site";
 
 const nextConfig: NextConfig = {
   // Self-hosted in Docker: ship only the files each route needs.
@@ -13,6 +14,11 @@ const nextConfig: NextConfig = {
     return [
       // One canonical URL for Georgian (served at `/` via the rewrite below).
       { source: "/ka", destination: "/", permanent: true },
+      ...legalPages.map((page) => ({
+        source: `/ka/${page}`,
+        destination: `/${page}`,
+        permanent: true,
+      })),
       // URLs of the original static site.
       { source: "/index.html", destination: "/", permanent: true },
       { source: "/index_en.html", destination: "/en", permanent: true },
@@ -21,7 +27,10 @@ const nextConfig: NextConfig = {
   },
   async rewrites() {
     return {
-      beforeFiles: [{ source: "/", destination: "/ka" }],
+      beforeFiles: [
+        { source: "/", destination: "/ka" },
+        ...legalPages.map((page) => ({ source: `/${page}`, destination: `/ka/${page}` })),
+      ],
       afterFiles: [],
       fallback: [],
     };
